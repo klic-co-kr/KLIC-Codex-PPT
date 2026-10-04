@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: [self-hosted, Linux]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check test dependencies
+        run: |
+          set -euo pipefail
+          python3 -c "import pptx, PIL, filelock, fitz, yaml, numpy, requests, pytest; print('deps ok')"
+
+      - name: Run offline test suite
+        run: |
+          set -euo pipefail
+          python3 -m pytest tests/ -q
