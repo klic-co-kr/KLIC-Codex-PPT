@@ -14,12 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check test dependencies
+      - name: Set up virtual environment
         run: |
           set -euo pipefail
-          python3 -c "import pptx, PIL, filelock, fitz, yaml, numpy, requests, pytest; print('deps ok')"
+          python3 -m venv .ci-venv
+          .ci-venv/bin/pip install --quiet --upgrade pip
+          .ci-venv/bin/pip install --quiet -r skills/codex-ppt/requirements.txt PyMuPDF PyYAML numpy requests pytest
 
       - name: Run offline test suite
         run: |
           set -euo pipefail
-          python3 -m pytest tests/ -q
+          .ci-venv/bin/python -m pytest tests/ -q

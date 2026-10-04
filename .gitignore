@@ -89,3 +89,6 @@ dmypy.json
 # data
 /data
 /decks
+
+# CI virtual environment on self-hosted runners
+.ci-venv/
