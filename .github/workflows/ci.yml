@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: [self-hosted, Linux]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up virtual environment
+        run: |
+          set -euo pipefail
+          python3 -m venv .ci-venv
+          .ci-venv/bin/pip install --quiet --upgrade pip
+          .ci-venv/bin/pip install --quiet -r skills/codex-ppt/requirements.txt PyMuPDF PyYAML numpy requests pytest
+
+      - name: Run offline test suite
+        run: |
+          set -euo pipefail
+          .ci-venv/bin/python -m pytest tests/ -q
